@@ -1,0 +1,12 @@
+# Normalize text files to LF in the repository.
+* text=auto eol=lf
+
+# Windows scripts keep CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Files that are hashed or compared byte for byte must never be converted.
+# Without this, a Windows checkout rewrites line endings and every hash stops matching.
+fixtures/** -text
+testdata/** -text
