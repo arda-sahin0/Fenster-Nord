@@ -50,8 +50,8 @@ export const noteTexts: Record<Note, { title: string; text: string }> = {
     text: 'Bei Fenstern ab dem 2. Obergeschoss kann ein Gerüst nötig sein. Das klären wir beim Aufmaß. Ein Gerüst ist im Richtpreis nicht enthalten.',
   },
   twoPersonInstall: {
-    title: 'Große Fenster',
-    text: `Fenster über ${formatDecimal(config.twoPersonInstallAboveM2)} m² bauen wir aus Sicherheitsgründen zu zweit ein. Ob dafür Mehrkosten entstehen, sagen wir Ihnen beim Aufmaß.`,
+    title: 'Preis für große Fenster folgt beim Aufmaß',
+    text: `Fenster über ${formatDecimal(config.twoPersonInstallAboveM2)} m² bauen wir aus Sicherheitsgründen zu zweit ein. Den endgültigen Preis für diese Elemente legen wir beim Aufmaß fest. Im Richtpreis ist dafür nichts eingerechnet.`,
   },
 };
 

@@ -50,7 +50,7 @@ try {
   assert.equal(await page.locator('.system.disabled .unavailable').first().innerText(), 'Nicht für Ihre Maße: Fenster 3 zu breit (max. 180 cm)');
   assert.equal(await button('Weiter').isDisabled(), true);
   const therm82 = page.locator('.system', { hasText: 'Therm 82' }).filter({ hasNotText: 'Plus' });
-  assert.equal(plain(await therm82.locator('.system-price').innerText()), '4.158,81 €');
+  assert.equal(plain(await therm82.locator('.system-price').innerText()), '4.123,11 €');
   await therm82.click();
   await button('Weiter').click();
 
@@ -62,9 +62,9 @@ try {
   assert.equal(await page.locator('.notice').count(), 2);
   await button('Richtpreis anzeigen').click();
 
-  // Step 4: result. Hand calculation, see README.
+  // Step 4: result. Windows 2.774,80 € + installation 450 € + 4 × 60 € = 3.464,80 € net.
   // Read aria-label, not the visible number: the visible number counts up for 0.7 s.
-  assert.equal(plain(await page.locator('.result-price').getAttribute('aria-label')), '4.158,81 €');
+  assert.equal(plain(await page.locator('.result-price').getAttribute('aria-label')), '4.123,11 €');
   const rows = (await page.locator('.breakdown tr').allInnerTexts()).map(plain);
   assert.deepEqual(rows, [
     'Kunststofffenster Therm 82 1,68 m² × 395,00 €/m² 663,60 €',
@@ -75,15 +75,18 @@ try {
     'Kunststofffenster Therm 82 3,20 m² × 395,00 €/m² 1.264,00 €',
     'Aufpreis zweiflügelig 120,00 €',
     'Fensterbank innen 2,00 m × 38,00 €/m 76,00 €',
-    'Montage inkl. Ausbau und Entsorgung der Altfenster 4 × 180,00 € 720,00 €',
-    'Summe netto 3.494,80 €',
-    'MwSt. 19 % 664,01 €',
-    'Richtpreis inkl. MwSt. 4.158,81 €',
+    'Montagepauschale je Auftrag Anfahrt, Baustelleneinrichtung, Abdeckarbeiten 450,00 €',
+    'Ausbau und Entsorgung der Altfenster 4 × 60,00 € 240,00 €',
+    'Summe netto 3.464,80 €',
+    'MwSt. 19 % 658,31 €',
+    'Richtpreis inkl. MwSt. 4.123,11 €',
   ]);
+  // Window 3 is 3,2 m²: its price is set during the on-site measurement.
+  assert.deepEqual(await page.locator('.line-note').allInnerTexts(), ['Großes Element über 3,00 m²: Den endgültigen Preis legen wir beim Aufmaß fest.']);
   assert.deepEqual(await page.locator('.notes strong').allInnerTexts(), [
     'Außerhalb unseres Montagegebiets',
     'Eventuell Gerüst nötig',
-    'Große Fenster',
+    'Preis für große Fenster folgt beim Aufmaß',
   ]);
   assert.equal(await page.locator('.info').count(), 1, 'subsidy note for Therm 82 (Uw 0.90)');
 

@@ -14,7 +14,7 @@ npm run build             # static site in dist/
 ## Check your changes
 
 ```sh
-npm test            # 28 tests of the price rules, checked against the client documents
+npm test            # 27 tests of the price rules, checked against the client documents
 npm run typecheck   # TypeScript errors
 npm run e2e         # builds the site and clicks through a full order on a 390 px screen
 ```
@@ -48,7 +48,7 @@ Progress is saved in the browser (`localStorage`), so a reload on the phone keep
 | File | What it does |
 |---|---|
 | [src/data/produktliste.csv](../src/data/produktliste.csv) | The client's product list, unchanged |
-| [src/pricing/config.ts](../src/pricing/config.ts) | Every price and rule, with its source. Open questions are marked `OPEN`. |
+| [src/pricing/config.ts](../src/pricing/config.ts) | Every price and rule, with its source (client documents or the client's answers). |
 | [src/pricing/products.ts](../src/pricing/products.ts) | Reads the CSV |
 | [src/pricing/calculate.ts](../src/pricing/calculate.ts) | Size checks, window prices, discounts, installation, VAT, notes |
 | [src/state.ts](../src/state.ts) | App state, saving in the browser, conversion from cm to the price input |

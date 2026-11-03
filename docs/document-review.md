@@ -231,7 +231,21 @@ The smallest allowed window (CSV: 400 × 400 mm) has 0.16 m² but is charged as 
 - **CSV format:** `;`-separated, ASCII, no BOM, LF line endings, 6 data rows, no empty or missing values.
 - **Classic 70** (CSV line 2, double-glazed, Uw 1.1): no subsidy claim is made for it. That's consistent.
 
-## Questions for the client (draft, German)
+## Answers from the client (2026-11-03)
+
+Questions 1–5 below were sent to Fenster Nord (6 and 7 were left out to keep the email short). The answers settle items 1–5 of this review:
+
+| Item | Answer | In the app |
+|---|---|---|
+| 1 Installation | Montagebedingungen apply: 450 € per order + 60 € per old window. The 180 € per window is out of date. Not combined. | Only this rule is left in the code |
+| 2 Subsidy | Note only for Uw ≤ 0.95, no amount, say that the application must be made before the order | As built |
+| 3 VAT | Show prices incl. 19 % VAT, net may be shown in addition | As built |
+| 4 Volume discount | On the window price including opening type, so also on the two-sash surcharge; not on roller shutter and installation | Discount base now includes the two-sash surcharge |
+| 5 Large elements | No fixed surcharge. Add nothing, but state clearly that the price for such elements is set during the on-site measurement | Note in the results and next to each large window in the breakdown |
+
+Still my own assumptions: items 6 (sill as an optional extra, not discounted) and 11 (two-sash from 80 cm).
+
+## Questions for the client (sent, German)
 
 1. **Montage:** Im Preisblatt (gültig ab 09/2026) steht 180 € je Fenster inkl. Ausbau und Entsorgung. In den Montagebedingungen (Stand 03/2026) stehen 450 € Pauschale je Auftrag und 60 € je Altfenster. Welche Regel gilt – oder werden beide kombiniert?
 2. **BEG-Förderung:** Laut Preisblatt sind alle 3-fach-Fenster förderfähig. Das Aluminiumfenster Slim 75 hat aber Uw 1,0; für die BEG sind höchstens 0,95 nötig. Soll der Förderhinweis nur bei Systemen bis 0,95 erscheinen?

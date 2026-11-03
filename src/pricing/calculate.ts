@@ -1,4 +1,4 @@
-import { config as defaultConfig, type Config } from './config';
+import { config } from './config';
 import { findProduct, type Product } from './products';
 
 export type Opening = 'tiltTurn' | 'fixed' | 'twoSash';
@@ -54,7 +54,6 @@ export interface WindowLine {
 
 export interface Installation {
   flatFeeCents: number;
-  perWindowCents: number;
   removalCents: number;
   totalCents: number;
 }
@@ -81,12 +80,12 @@ const cents = (eur: number) => Math.round(eur * 100);
 /** Discount as a negative amount, rounded to whole cents. */
 const discount = (amountCents: number, rate: number) => -Math.round(amountCents * rate);
 
-export function isSubsidyEligible(product: Product, cfg: Config = defaultConfig): boolean {
-  return product.uw <= cfg.subsidyMaxUw;
+export function isSubsidyEligible(product: Product): boolean {
+  return product.uw <= config.subsidyMaxUw;
 }
 
 /** Checks one window against the size limits of its system. Empty list = fine. */
-export function checkWindow(input: WindowInput, cfg: Config = defaultConfig): WindowProblem[] {
+export function checkWindow(input: WindowInput): WindowProblem[] {
   const product = findProduct(input.productId);
   if (!product) return ['unknownProduct'];
 
@@ -96,22 +95,22 @@ export function checkWindow(input: WindowInput, cfg: Config = defaultConfig): Wi
   if (input.widthMm > product.widthMaxMm) problems.push('widthTooLarge');
   if (input.heightMm < product.heightMinMm) problems.push('heightTooSmall');
   if (input.heightMm > product.heightMaxMm) problems.push('heightTooLarge');
-  if (input.opening === 'twoSash' && input.widthMm < cfg.twoSashMinWidthMm) problems.push('twoSashTooNarrow');
+  if (input.opening === 'twoSash' && input.widthMm < config.twoSashMinWidthMm) problems.push('twoSashTooNarrow');
   return problems;
 }
 
-function priceWindow(input: WindowInput, product: Product, cfg: Config): WindowLine {
+function priceWindow(input: WindowInput, product: Product): WindowLine {
   const widthM = input.widthMm / 1000;
   const areaM2 = (input.widthMm * input.heightMm) / 1_000_000;
-  const chargedAreaM2 = Math.max(areaM2, cfg.minChargedAreaM2);
+  const chargedAreaM2 = Math.max(areaM2, config.minChargedAreaM2);
 
   const baseCents = cents(chargedAreaM2 * product.pricePerM2Eur);
   const unit: UnitPrice = {
     baseCents,
-    fixedGlazingDiscountCents: input.opening === 'fixed' ? discount(baseCents, cfg.fixedGlazingDiscount) : 0,
-    twoSashSurchargeCents: input.opening === 'twoSash' ? cents(cfg.twoSashSurchargeEur) : 0,
-    rollerShutterCents: input.rollerShutter ? cents(widthM * cfg.rollerShutterEurPerM) : 0,
-    interiorSillCents: input.interiorSill ? cents(widthM * cfg.interiorSillEurPerM) : 0,
+    fixedGlazingDiscountCents: input.opening === 'fixed' ? discount(baseCents, config.fixedGlazingDiscount) : 0,
+    twoSashSurchargeCents: input.opening === 'twoSash' ? cents(config.twoSashSurchargeEur) : 0,
+    rollerShutterCents: input.rollerShutter ? cents(widthM * config.rollerShutterEurPerM) : 0,
+    interiorSillCents: input.interiorSill ? cents(widthM * config.interiorSillEurPerM) : 0,
     totalCents: 0,
   };
   unit.totalCents =
@@ -126,59 +125,56 @@ function priceWindow(input: WindowInput, product: Product, cfg: Config): WindowL
     product,
     areaM2,
     chargedAreaM2,
-    minAreaApplied: areaM2 < cfg.minChargedAreaM2,
-    needsTwoPersonInstall: areaM2 > cfg.twoPersonInstallAboveM2,
-    subsidyEligible: isSubsidyEligible(product, cfg),
+    minAreaApplied: areaM2 < config.minChargedAreaM2,
+    needsTwoPersonInstall: areaM2 > config.twoPersonInstallAboveM2,
+    subsidyEligible: isSubsidyEligible(product),
     unit,
     totalCents: unit.totalCents * input.quantity,
   };
 }
 
-/** The part of a line the volume discount applies to (Preise item 6, see config). */
-function discountBaseCents(line: WindowLine, cfg: Config): number {
+/** The part of a line the volume discount applies to: window price including opening type (see config). */
+function discountBaseCents(line: WindowLine): number {
   const u = line.unit;
-  let base = u.baseCents + u.fixedGlazingDiscountCents;
-  if (cfg.volumeDiscountIncludesExtras) base += u.twoSashSurchargeCents + u.rollerShutterCents;
-  return base * line.input.quantity;
+  return (u.baseCents + u.fixedGlazingDiscountCents + u.twoSashSurchargeCents) * line.input.quantity;
 }
 
-function priceInstallation(windowCount: number, cfg: Config): Installation {
-  const model = cfg.installationModel;
-  const flatFeeCents = model === 'perWindow' ? 0 : cents(cfg.installationFlatFeeEur);
-  const perWindowCents = model === 'flatFeePlusRemoval' ? 0 : cents(cfg.installationPerWindowEur) * windowCount;
-  const removalCents = model === 'flatFeePlusRemoval' ? cents(cfg.removalPerOldWindowEur) * windowCount : 0;
-  return { flatFeeCents, perWindowCents, removalCents, totalCents: flatFeeCents + perWindowCents + removalCents };
+/** Flat fee per order plus removal of one old window per new window. */
+function priceInstallation(windowCount: number): Installation {
+  const flatFeeCents = cents(config.installationFlatFeeEur);
+  const removalCents = cents(config.removalPerOldWindowEur) * windowCount;
+  return { flatFeeCents, removalCents, totalCents: flatFeeCents + removalCents };
 }
 
 /** undefined while the postcode is not five digits. */
-export function isInServiceArea(postcode: string, cfg: Config = defaultConfig): boolean | undefined {
+export function isInServiceArea(postcode: string): boolean | undefined {
   if (!/^\d{5}$/.test(postcode.trim())) return undefined;
   const n = Number(postcode);
-  return n >= cfg.serviceAreaPostcodes.from && n <= cfg.serviceAreaPostcodes.to;
+  return n >= config.serviceAreaPostcodes.from && n <= config.serviceAreaPostcodes.to;
 }
 
-export function calculateQuote(order: OrderInput, cfg: Config = defaultConfig): QuoteResult {
+export function calculateQuote(order: OrderInput): QuoteResult {
   const problems = order.windows
-    .map((w, index) => ({ index, problems: checkWindow(w, cfg) }))
+    .map((w, index) => ({ index, problems: checkWindow(w) }))
     .filter((p) => p.problems.length > 0);
   if (problems.length > 0) return { ok: false, problems };
 
-  const lines = order.windows.map((w) => priceWindow(w, findProduct(w.productId)!, cfg));
+  const lines = order.windows.map((w) => priceWindow(w, findProduct(w.productId)!));
   const windowCount = lines.reduce((sum, l) => sum + l.input.quantity, 0);
   const windowsSubtotalCents = lines.reduce((sum, l) => sum + l.totalCents, 0);
 
   const volumeDiscountCents =
-    windowCount >= cfg.volumeDiscountMinWindows
-      ? discount(lines.reduce((sum, l) => sum + discountBaseCents(l, cfg), 0), cfg.volumeDiscount)
+    windowCount >= config.volumeDiscountMinWindows
+      ? discount(lines.reduce((sum, l) => sum + discountBaseCents(l), 0), config.volumeDiscount)
       : 0;
 
-  const installation = priceInstallation(windowCount, cfg);
+  const installation = priceInstallation(windowCount);
   const netCents = windowsSubtotalCents + volumeDiscountCents + installation.totalCents;
-  const vatCents = Math.round(netCents * cfg.vatRate);
+  const vatCents = Math.round(netCents * config.vatRate);
 
   const notes: Note[] = [];
-  if (order.postcode !== undefined && isInServiceArea(order.postcode, cfg) === false) notes.push('outsideServiceArea');
-  if ((order.highestFloor ?? 0) >= cfg.scaffoldingFromFloor) notes.push('scaffoldingPossible');
+  if (order.postcode !== undefined && isInServiceArea(order.postcode) === false) notes.push('outsideServiceArea');
+  if ((order.highestFloor ?? 0) >= config.scaffoldingFromFloor) notes.push('scaffoldingPossible');
   if (lines.some((l) => l.needsTwoPersonInstall)) notes.push('twoPersonInstall');
 
   return {

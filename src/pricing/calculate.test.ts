@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { calculateQuote, checkWindow, isSubsidyEligible, type OrderInput, type Quote, type WindowInput } from './calculate';
-import { config, type Config } from './config';
 import { findProduct } from './products';
 
 // Therm 82, 120 × 140 cm: the example from the price sheet.
@@ -15,8 +14,8 @@ const window = (overrides: Partial<WindowInput> = {}): WindowInput => ({
   ...overrides,
 });
 
-function quote(order: OrderInput, cfg: Config = config): Quote {
-  const result = calculateQuote(order, cfg);
+function quote(order: OrderInput): Quote {
+  const result = calculateQuote(order);
   if (!result.ok) throw new Error(`Unexpected problems: ${JSON.stringify(result.problems)}`);
   return result.quote;
 }
@@ -63,10 +62,10 @@ describe('window price', () => {
 describe('order total', () => {
   it('adds installation and 19 % VAT', () => {
     const q = quote({ windows: [window()] });
-    expect(q.installation.totalCents).toBe(18000);
-    expect(q.netCents).toBe(84360);
-    expect(q.vatCents).toBe(16028); // 843.60 × 0.19 = 160.284
-    expect(q.grossCents).toBe(100388);
+    expect(q.installation.totalCents).toBe(51000); // 450 € + 1 × 60 €
+    expect(q.netCents).toBe(117360);
+    expect(q.vatCents).toBe(22298); // 1,173.60 × 0.19 = 222.984
+    expect(q.grossCents).toBe(139658);
   });
 
   it('gives no volume discount for 9 windows', () => {
@@ -77,8 +76,8 @@ describe('order total', () => {
     const q = quote({ windows: [window({ quantity: 6 }), window({ quantity: 4 })] });
     expect(q.windowCount).toBe(10);
     expect(q.volumeDiscountCents).toBe(-33180); // 5 % of 6,636.00 €
-    expect(q.installation.totalCents).toBe(180000);
-    expect(q.netCents).toBe(663600 - 33180 + 180000);
+    expect(q.installation.totalCents).toBe(105000); // 450 € + 10 × 60 €
+    expect(q.netCents).toBe(663600 - 33180 + 105000);
   });
 
   it('applies the volume discount to the price after the fixed-glazing discount', () => {
@@ -86,26 +85,21 @@ describe('order total', () => {
     expect(q.volumeDiscountCents).toBe(-28203); // 5 % of 10 × 564.06 €
   });
 
-  it('leaves extras out of the volume discount unless configured', () => {
-    const order = { windows: [window({ quantity: 10, opening: 'twoSash' as const })] };
-    expect(quote(order).volumeDiscountCents).toBe(-33180);
-    expect(quote(order, { ...config, volumeDiscountIncludesExtras: true }).volumeDiscountCents).toBe(-39180);
+  it('includes the two-sash surcharge in the volume discount', () => {
+    const q = quote({ windows: [window({ quantity: 10, opening: 'twoSash' })] });
+    expect(q.volumeDiscountCents).toBe(-39180); // 5 % of 10 × (663.60 € + 120 €)
+  });
+
+  it('leaves roller shutter and sill out of the volume discount', () => {
+    const q = quote({ windows: [window({ quantity: 10, rollerShutter: true, interiorSill: true })] });
+    expect(q.volumeDiscountCents).toBe(-33180);
   });
 });
 
-describe('installation models (open question, review item 1)', () => {
-  const order = { windows: [window({ quantity: 4 })] };
-
-  it('perWindow: 180 € × 4', () => {
-    expect(quote(order, { ...config, installationModel: 'perWindow' }).installation.totalCents).toBe(72000);
-  });
-
-  it('flatFeePlusRemoval: 450 € + 60 € × 4', () => {
-    expect(quote(order, { ...config, installationModel: 'flatFeePlusRemoval' }).installation.totalCents).toBe(69000);
-  });
-
-  it('flatFeePlusPerWindow: 450 € + 180 € × 4', () => {
-    expect(quote(order, { ...config, installationModel: 'flatFeePlusPerWindow' }).installation.totalCents).toBe(117000);
+describe('installation (Montagebedingungen §2, confirmed by the client)', () => {
+  it('is 450 € per order plus 60 € per old window', () => {
+    const q = quote({ windows: [window({ quantity: 3 }), window({ widthMm: 800, heightMm: 1000 })] });
+    expect(q.installation).toEqual({ flatFeeCents: 45000, removalCents: 24000, totalCents: 69000 });
   });
 });
 

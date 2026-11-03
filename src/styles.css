@@ -970,6 +970,15 @@ input[aria-invalid='true'] {
   margin: 0 4px 8px;
 }
 
+.line-note {
+  margin: -2px 0 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--notice-bg);
+  border: 1px solid var(--notice-border);
+  font-size: 0.85rem;
+}
+
 .breakdown table {
   width: 100%;
   border-collapse: separate;

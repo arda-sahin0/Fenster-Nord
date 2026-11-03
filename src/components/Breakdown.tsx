@@ -19,27 +19,16 @@ export function Breakdown({ quote }: { quote: Quote }) {
           {quote.volumeDiscountCents !== 0 && (
             <Row
               label={`Mengenrabatt ${percent(config.volumeDiscount)}`}
-              detail={`ab ${config.volumeDiscountMinWindows} Fenstern, auf die Fensterpreise`}
+              detail={`ab ${config.volumeDiscountMinWindows} Fenstern, auf den Fensterpreis inkl. Öffnungsart`}
               cents={quote.volumeDiscountCents}
             />
           )}
-          {inst.flatFeeCents > 0 && (
-            <Row label="Montagepauschale" detail="Anfahrt, Baustelleneinrichtung, Abdecken" cents={inst.flatFeeCents} />
-          )}
-          {inst.perWindowCents > 0 && (
-            <Row
-              label="Montage inkl. Ausbau und Entsorgung der Altfenster"
-              detail={`${quote.windowCount} × ${formatEur(config.installationPerWindowEur)}`}
-              cents={inst.perWindowCents}
-            />
-          )}
-          {inst.removalCents > 0 && (
-            <Row
-              label="Ausbau und Entsorgung der Altfenster"
-              detail={`${quote.windowCount} × ${formatEur(config.removalPerOldWindowEur)}`}
-              cents={inst.removalCents}
-            />
-          )}
+          <Row label="Montagepauschale je Auftrag" detail="Anfahrt, Baustelleneinrichtung, Abdeckarbeiten" cents={inst.flatFeeCents} />
+          <Row
+            label="Ausbau und Entsorgung der Altfenster"
+            detail={`${quote.windowCount} × ${formatEur(config.removalPerOldWindowEur)}`}
+            cents={inst.removalCents}
+          />
           <Row label="Summe netto" cents={quote.netCents} className="subtotal" />
           <Row label={`MwSt. ${percent(config.vatRate)}`} cents={quote.vatCents} />
           <Row label="Richtpreis inkl. MwSt." cents={quote.grossCents} className="total" />
@@ -56,10 +45,15 @@ function LineBlock({ line, index }: { line: WindowLine; index: number }) {
 
   const title = `Fenster ${index + 1}: ${input.quantity > 1 ? `${input.quantity} × ` : ''}${size}, ${openingLabels[input.opening].title}`;
 
-  // Title outside the table, so it sits above the glass box instead of inside it.
+  // Title outside the table, so it sits above the white box instead of inside it.
   return (
     <>
       <h3 className="line-title">{title}</h3>
+      {line.needsTwoPersonInstall && (
+        <p className="line-note">
+          Großes Element über {formatDecimal(config.twoPersonInstallAboveM2)} m²: Den endgültigen Preis legen wir beim Aufmaß fest.
+        </p>
+      )}
       <table aria-label={title}>
         <tbody>
           <Row

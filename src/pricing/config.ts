@@ -1,14 +1,6 @@
 // All prices and business rules in one place.
-// Sources: Preise = Fenster-Nord_Preise-und-Produkte.pdf, Montage = Fenster-Nord_Montagebedingungen.pdf.
-// Items marked OPEN are not settled by the documents; see docs/document-review.md.
-
-export type InstallationModel =
-  /** Preise item 5: 180 € per window, removal and disposal included. */
-  | 'perWindow'
-  /** Montage §2: 450 € flat fee per order + 60 € per old window. */
-  | 'flatFeePlusRemoval'
-  /** Both combined: 450 € flat fee + 180 € per window. */
-  | 'flatFeePlusPerWindow';
+// Sources: Preise = Fenster-Nord_Preise-und-Produkte.pdf, Montage = Fenster-Nord_Montagebedingungen.pdf,
+// Antwort = answers from Fenster Nord to my questions (2026-11-03). Details: docs/document-review.md.
 
 export const config = {
   /** Preise item 2: smaller windows are charged as this area. */
@@ -18,39 +10,36 @@ export const config = {
   fixedGlazingDiscount: 0.15,
   /** Preise item 3: surcharge per two-sash window. */
   twoSashSurchargeEur: 120,
-  /** OPEN (review item 11): no minimum width given. Own assumption. */
+  /** Own assumption: the documents give no minimum width (review item 11). */
   twoSashMinWidthMm: 800,
 
   /** Preise item 4: roller shutter per metre of window width. */
   rollerShutterEurPerM: 95,
-  /** Montage §2: interior window sill per metre. OPEN (review item 6): unclear if offered. */
+  /** Montage §2: interior window sill per metre. */
   interiorSillEurPerM: 38,
 
-  /** OPEN (review item 1): which installation price applies. */
-  installationModel: 'perWindow' as InstallationModel,
-  installationPerWindowEur: 180,
+  /** Montage §2, confirmed by Antwort: flat fee per order plus removal per old window.
+   *  The 180 € per window in Preise item 5 is out of date. */
   installationFlatFeeEur: 450,
   removalPerOldWindowEur: 60,
 
   /** Preise item 6: from this many windows per order ... */
   volumeDiscountMinWindows: 10,
-  /** ... this discount on the window prices, never on installation. */
+  /** ... this discount. Antwort: on the window price including opening type (fixed-glazing
+   *  discount, two-sash surcharge), not on roller shutter, sill or installation. */
   volumeDiscount: 0.05,
-  /** OPEN (review item 5): does the discount also cover two-sash surcharge and roller shutter? */
-  volumeDiscountIncludesExtras: false,
 
-  /** Preise: all prices are net. German VAT for windows. */
+  /** Preise: all prices are net. Antwort: show them incl. VAT. */
   vatRate: 0.19,
 
-  /** Montage §3: above this area, two installers are needed. OPEN (review item 4): no price. */
+  /** Montage §3: above this area, two installers are needed.
+   *  Antwort: no fixed surcharge; the price for such elements is set during the on-site measurement. */
   twoPersonInstallAboveM2: 3.0,
   /** Montage §4: installation without surcharge in this postcode range. */
   serviceAreaPostcodes: { from: 20000, to: 25999 },
   /** Montage §5: from this floor up, scaffolding may be needed. */
   scaffoldingFromFloor: 2,
 
-  /** OPEN (review item 2): BEG requires Uw ≤ 0.95. Verify on bafa.de. */
+  /** BEG limit for windows. Antwort: show the subsidy note only up to this value, without an amount. */
   subsidyMaxUw: 0.95,
 };
-
-export type Config = typeof config;
