@@ -1,59 +1,51 @@
-# Fenster-Nord
+# Fenster Nord – Richtpreis-Rechner
 
-Online price estimator for the (fictional) window maker Fenster Nord GmbH: homeowners enter their windows on their phone, get a traceable estimate and request a free on-site measurement.
+Hauseigentümer geben am Handy ihre Fenster ein, sehen einen nachvollziehbaren Richtpreis inkl. MwSt. und fragen danach ein kostenloses Aufmaß an.
 
-## Start
-
-```sh
-npm install
-npm run dev         # http://localhost:5173
-npm run build       # static site in dist/
-```
-
-## Check your changes
+**Demo:** https://arda-sahin0.github.io/Fenster-Nord/ · **Code:** https://github.com/arda-sahin0/Fenster-Nord
 
 ```sh
-npm test            # price rules, checked against the client documents
-npm run typecheck   # TypeScript errors
+npm install && npm run dev   # lokal starten
+npm test                     # 28 Tests der Preisregeln, erster Test = Beispiel aus dem Preisblatt (663,60 €)
+npm run e2e                  # klickt eine komplette Bestellung am Handy-Format durch und prüft jeden Betrag
 ```
 
-## How the app works
+Aufbau und Dateien: [docs/development.md](docs/development.md)
 
-Six steps, one question per screen, built for phones:
+## Annahmen und warum
 
-1. **Fenster:** size in cm, opening type, roller shutter, interior sill, quantity
-2. **Auswahl:** all six systems with the total price for these windows; systems that don't fit are greyed out with the reason
-3. **Ort:** postcode and highest floor, for the service-area and scaffolding notes
-4. **Preis:** total incl. VAT and a line-by-line breakdown
-5. **Anfrage:** contact form for the free on-site measurement
-6. **Zusammenfassung:** shown on screen, nothing is sent
+Meine Rückfragen an Fenster Nord sind gestellt, Antworten stehen noch aus. Alle strittigen Regeln stehen an einer Stelle ([config.ts](src/pricing/config.ts), markiert mit `OPEN`) und lassen sich mit einer Zeile umstellen.
 
-Design decisions:
-
-- The price comes before the contact form, so nobody has to leave a phone number just to see a price.
-- One system for the whole order. That matches how people renovate, and it keeps the comparison simple.
-- Progress is saved in the browser, so a reload on the phone keeps the entered windows.
-
-## How the price is calculated
-
-| File | What it does |
+| Annahme | Warum |
 |---|---|
-| [src/data/produktliste.csv](src/data/produktliste.csv) | The client's product list, unchanged |
-| [src/pricing/config.ts](src/pricing/config.ts) | Every price and rule, with its source. Open questions are marked `OPEN`. |
-| [src/pricing/products.ts](src/pricing/products.ts) | Reads the CSV |
-| [src/pricing/calculate.ts](src/pricing/calculate.ts) | Size checks, window prices, discounts, installation, VAT, notes |
-| [src/App.tsx](src/App.tsx) | Step navigation and app state |
-| [src/steps/](src/steps/) | One file per screen |
-| [src/ui/texts.ts](src/ui/texts.ts) | German wording for notes and errors |
+| Montage 180 € je Fenster inkl. Ausbau und Entsorgung | Das Preisblatt ist neuer (09/2026) als die Montagebedingungen (03/2026) und richtet sich an Privatkunden |
+| Preise inkl. 19 % USt., netto in der Aufstellung | Privatkunden müssen Endpreise sehen (Preisangabenverordnung) |
+| Förderhinweis nur bei Uw ≤ 0,95, ohne Betrag, mit Bedingungen | Grenzwert der BEG; ein Zuschuss hängt zusätzlich von Energieberater und Antrag ab |
+| Mengenrabatt nur auf den Fensterpreis, nicht auf Stulp-Aufpreis, Rollladen, Montage | Engste Lesart von „5 % auf die Fensterpreise“ |
+| Zwei-Mann-Montage über 3 m²: Hinweis statt Aufpreis | Kein Preis angegeben |
+| Zweiflügelig erst ab 80 cm Breite | Keine Angabe; schmaler ist technisch kaum sinnvoll |
+| Ein Fenstersystem für den ganzen Auftrag | So wird meist renoviert, und der Vergleich der Systeme bleibt einfach |
+| Maße in cm am alten Fenster | Laien können das Außenmaß eines neuen Blendrahmens nicht messen; das Aufmaß korrigiert es |
+| Preis vor dem Kontaktformular | Wer erst seine Telefonnummer abgeben muss, bricht eher ab |
 
-## Project files
+## Was mir an den Unterlagen aufgefallen ist
 
-| File | What it is for |
+1. **Zwei Montagepreise:** 180 € je Fenster (Preisblatt) gegen 450 € Pauschale + 60 € je Altfenster (Montagebedingungen). Bei einem Fenster sind das bis zu 450 € Unterschied.
+2. **Falsches Förderversprechen:** „Alle 3-fach-Fenster sind BEG-förderfähig“ stimmt nicht. Slim 75 hat Uw 1,0, gefordert sind höchstens 0,95. Laut Preisblatt soll das „deutlich erscheinen“, ein Risiko im Wettbewerbsrecht.
+3. **Nur Nettopreise**, obwohl die Zielgruppe Privatkunden sind.
+4. **Regeln ohne Preis:** Zwei-Mann-Montage über 3 m² (jedes System kann größer sein), Anfahrt außerhalb PLZ 20000–25999, Gerüst ab dem 2. OG.
+5. **Interne Notizen gemischt mit Kundentext:** Das Preisblatt ist eine „interne Arbeitsunterlage“; Vertriebshinweise dürfen nicht 1:1 in die App.
+
+Alle 17 Punkte mit Fundstelle und Zitat: [docs/document-review.md](docs/document-review.md)
+
+## Wo die KI falsch lag
+
+| Fehler | Wie ich es gemerkt habe |
 |---|---|
-| [AGENTS.md](AGENTS.md) | Rules for AI coding agents. `CLAUDE.md` loads it for Claude Code. |
-| [docs/document-review.md](docs/document-review.md) | Problems found in the client documents, with sources |
-| [docs/ai-log.md](docs/ai-log.md) | Where AI tools got something wrong, and how it was noticed |
-| [docs/open-problems.md](docs/open-problems.md) | What still blocks or weakens the project, with an owner each |
-| [docs/run-report-template.md](docs/run-report-template.md) | How to write up a real run, with evidence |
-| [docs/windows-notes.md](docs/windows-notes.md) | Windows pitfalls that cost time before |
-| [scripts/publish-gh-pages.sh](scripts/publish-gh-pages.sh) | Publish a built folder to the `gh-pages` branch |
+| Eine Rückfrage war keine: Reihenfolge von Mindestfläche und Festverglasungs-Rabatt. Beides sind Multiplikationen, die Reihenfolge ändert nichts. | Beim Nachrechnen der Testfälle von Hand |
+| Vite-Version mit bekannten Sicherheitslücken gewählt; danach versprach `npm audit fix` eine Lösung, die keine war | `npm audit` nach jeder Installation erneut ausgeführt |
+| Der Klicktest las 2.941,30 € statt 4.158,81 €: Er las die Zahl, während sie noch hochzählte | Ergebnis passte nicht zur Rechnung von Hand; der Test liest jetzt den Endwert |
+| Nach dem Redesign blieb toter Code: ein Hinweis, der überall wieder herausgefiltert wurde, zwei Komponenten für dieselbe Zeichnung, kaum sichtbare animierte Hintergrundflächen | Eigenes Review und Suche nach ungenutzten Klassen und Exporten |
+| Ein Hintergrundserver wurde als „gestoppt“ gemeldet, lief aber weiter | Der nächste Start scheiterte am belegten Port |
+
+Vollständiges Protokoll: [docs/ai-log.md](docs/ai-log.md)

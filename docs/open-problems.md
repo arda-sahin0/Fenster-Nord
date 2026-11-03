@@ -10,9 +10,9 @@ Details and sources for each item: [document-review.md](document-review.md).
 
 | # | Problem | Why it matters | Owner | Next step |
 |---|---|---|---|---|
-| 1 | Two installation prices: 180 €/window (Preise) vs. 450 € flat + 60 €/old window (Montage) | Changes every price by up to 450 € net | Client | Ask the client; until then use 180 €/window, switchable in config |
-| 2 | "All triple-glazed windows qualify for BEG" is false for Slim 75 (Uw 1.0 > 0.95) | False subsidy promise to customers | Client | Ask the client; show the note only for Uw ≤ 0.95 |
-| 3 | Only net prices for private customers | Consumer prices must include VAT | Client | Ask the client; show gross prices with net and VAT in the breakdown |
+| 1 | Two installation prices: 180 €/window (Preise) vs. 450 € flat + 60 €/old window (Montage) | Changes every price by up to 450 € net | Client | Asked 2026-11-03, waiting; until then use 180 €/window, switchable in config |
+| 2 | "All triple-glazed windows qualify for BEG" is false for Slim 75 (Uw 1.0 > 0.95) | False subsidy promise to customers | Client | Asked 2026-11-03, waiting; meanwhile show the note only for Uw ≤ 0.95 |
+| 3 | Only net prices for private customers | Consumer prices must include VAT | Client | Asked 2026-11-03, waiting; meanwhile show gross prices with net and VAT in the breakdown |
 
 ## Smaller items
 
@@ -20,7 +20,9 @@ Details and sources for each item: [document-review.md](document-review.md).
 - Two-person installation over 3 m² has no price (review item 4).
 - Interior window sill only in the installation terms (review item 6).
 - Two-sash window has no minimum width (review item 11).
-- Questions to the client not sent yet.
+- Rewritten commit history (private email) not yet force-pushed; GitHub still has the old commits.
+- Repo is private; make it public and switch on GitHub Pages to put the demo online.
+- Verify the BEG limit (Uw ≤ 0.95) on bafa.de before submission.
 
 ## Solved
 
