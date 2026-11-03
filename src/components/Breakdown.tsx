@@ -54,56 +54,58 @@ function LineBlock({ line, index }: { line: WindowLine; index: number }) {
   const widthM = input.widthMm / 1000;
   const size = `${formatCm(input.widthMm / 10)} × ${formatCm(input.heightMm / 10)} cm`;
 
+  const title = `Fenster ${index + 1}: ${input.quantity > 1 ? `${input.quantity} × ` : ''}${size}, ${openingLabels[input.opening].title}`;
+
+  // Title outside the table, so it sits above the glass box instead of inside it.
   return (
-    <table>
-      <caption>
-        Fenster {index + 1}: {input.quantity > 1 && `${input.quantity} × `}
-        {size}, {openingLabels[input.opening].title}
-      </caption>
-      <tbody>
-        <Row
-          label={product.name}
-          detail={
-            line.minAreaApplied
-              ? `${formatDecimal(line.areaM2)} m², berechnet mit Mindestfläche ${formatDecimal(line.chargedAreaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
-              : `${formatDecimal(line.areaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
-          }
-          cents={unit.baseCents}
-        />
-        {unit.fixedGlazingDiscountCents !== 0 && (
+    <>
+      <h3 className="line-title">{title}</h3>
+      <table aria-label={title}>
+        <tbody>
           <Row
-            label="Nachlass Festverglasung"
-            detail={`${Math.round(config.fixedGlazingDiscount * 100)} % auf den Fensterpreis`}
-            cents={unit.fixedGlazingDiscountCents}
+            label={product.name}
+            detail={
+              line.minAreaApplied
+                ? `${formatDecimal(line.areaM2)} m², berechnet mit Mindestfläche ${formatDecimal(line.chargedAreaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
+                : `${formatDecimal(line.areaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
+            }
+            cents={unit.baseCents}
           />
-        )}
-        {unit.twoSashSurchargeCents !== 0 && (
-          <Row label="Aufpreis zweiflügelig" cents={unit.twoSashSurchargeCents} />
-        )}
-        {unit.rollerShutterCents !== 0 && (
-          <Row
-            label="Rollladen"
-            detail={`${formatDecimal(widthM)} m × ${formatEur(config.rollerShutterEurPerM)}/m`}
-            cents={unit.rollerShutterCents}
-          />
-        )}
-        {unit.interiorSillCents !== 0 && (
-          <Row
-            label="Fensterbank innen"
-            detail={`${formatDecimal(widthM)} m × ${formatEur(config.interiorSillEurPerM)}/m`}
-            cents={unit.interiorSillCents}
-          />
-        )}
-        {input.quantity > 1 && (
-          <Row
-            label={`${input.quantity} Stück`}
-            detail={`${input.quantity} × ${formatCents(unit.totalCents)}`}
-            cents={line.totalCents}
-            className="subtotal"
-          />
-        )}
-      </tbody>
-    </table>
+          {unit.fixedGlazingDiscountCents !== 0 && (
+            <Row
+              label="Nachlass Festverglasung"
+              detail={`${Math.round(config.fixedGlazingDiscount * 100)} % auf den Fensterpreis`}
+              cents={unit.fixedGlazingDiscountCents}
+            />
+          )}
+          {unit.twoSashSurchargeCents !== 0 && (
+            <Row label="Aufpreis zweiflügelig" cents={unit.twoSashSurchargeCents} />
+          )}
+          {unit.rollerShutterCents !== 0 && (
+            <Row
+              label="Rollladen"
+              detail={`${formatDecimal(widthM)} m × ${formatEur(config.rollerShutterEurPerM)}/m`}
+              cents={unit.rollerShutterCents}
+            />
+          )}
+          {unit.interiorSillCents !== 0 && (
+            <Row
+              label="Fensterbank innen"
+              detail={`${formatDecimal(widthM)} m × ${formatEur(config.interiorSillEurPerM)}/m`}
+              cents={unit.interiorSillCents}
+            />
+          )}
+          {input.quantity > 1 && (
+            <Row
+              label={`${input.quantity} Stück`}
+              detail={`${input.quantity} × ${formatCents(unit.totalCents)}`}
+              cents={line.totalCents}
+              className="subtotal"
+            />
+          )}
+        </tbody>
+      </table>
+    </>
   );
 }
 

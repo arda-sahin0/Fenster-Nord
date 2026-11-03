@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { OpeningIcon } from '../components/OpeningIcon';
+import { WindowPreview } from '../components/WindowPreview';
 import type { Opening } from '../pricing/calculate';
 import { config } from '../pricing/config';
 import { sizeRangeCm, type WindowSpec } from '../state';
@@ -171,6 +172,13 @@ function WindowEditor({ initial, title, onSave, onCancel }: EditorProps) {
         </span>
         <Field label="Höhe" unit="cm" value={height} onChange={setHeight} error={show(height, heightError)} />
       </div>
+
+      <WindowPreview
+        widthCm={widthError ? NaN : widthCm}
+        heightCm={heightError ? NaN : heightCm}
+        opening={opening}
+        rollerShutter={rollerShutter}
+      />
 
       <fieldset>
         <legend>Wie soll es sich öffnen lassen?</legend>

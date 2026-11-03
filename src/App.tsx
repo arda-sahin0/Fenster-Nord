@@ -39,6 +39,11 @@ export function App() {
 
   return (
     <>
+      <div className="backdrop" aria-hidden="true">
+        <span className="blob one" />
+        <span className="blob two" />
+        <span className="blob three" />
+      </div>
       <header className="site-header">
         <div className="brand">
           <span className="logo" aria-hidden="true" />
@@ -66,7 +71,8 @@ export function App() {
         </nav>
       )}
 
-      <main>
+      {/* key={step} remounts the content on every step, which replays the slide-in animation. */}
+      <main key={step} className="step-enter">
         {step === 'windows' && (
           <WindowsStep windows={state.windows} onChange={(windows) => update({ windows })} onNext={() => go('system')} />
         )}

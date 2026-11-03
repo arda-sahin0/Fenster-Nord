@@ -55,7 +55,7 @@ export function SystemStep({ state, onSelect, onBack, onNext }: Props) {
                 {insulationLabel(product.uw)} (U-Wert {formatDecimal(product.uw)})
               </span>
               {result.ok && result.quote.lines[0]?.subsidyEligible && (
-                <span className="badge">Kann für die BEG-Förderung infrage kommen</span>
+                <span className="badge">Evtl. förderfähig (BEG)</span>
               )}
               {!result.ok && (
                 <span className="unavailable">
