@@ -8,22 +8,18 @@ Details and sources for each item: [document-review.md](document-review.md).
 
 ## Blocking
 
-| # | Problem | Why it matters | Owner | Next step |
-|---|---|---|---|---|
-| 1 | Two installation prices: 180 €/window (Preise) vs. 450 € flat + 60 €/old window (Montage) | Changes every price by up to 450 € net | Client | Asked 2026-11-03, waiting; until then use 180 €/window, switchable in config |
-| 2 | "All triple-glazed windows qualify for BEG" is false for Slim 75 (Uw 1.0 > 0.95) | False subsidy promise to customers | Client | Asked 2026-11-03, waiting; meanwhile show the note only for Uw ≤ 0.95 |
-| 3 | Only net prices for private customers | Consumer prices must include VAT | Client | Asked 2026-11-03, waiting; meanwhile show gross prices with net and VAT in the breakdown |
+None.
 
 ## Smaller items
 
-- Volume discount: unclear whether it covers the two-sash surcharge and roller shutter (review item 5).
-- Two-person installation over 3 m² has no price (review item 4).
-- Interior window sill only in the installation terms (review item 6).
-- Two-sash window has no minimum width (review item 11).
-- Rewritten commit history (private email) not yet force-pushed; GitHub still has the old commits.
-- Repo is private; make it public and switch on GitHub Pages to put the demo online.
+- Interior window sill: own assumption that it is an optional extra and not discounted (review item 6).
+- Two-sash windows only from 80 cm width: own assumption (review item 11).
+- Reviewers need access to the code: GitHub's public API showed the repo as private. Make it public or invite the reviewers.
 - Verify the BEG limit (Uw ≤ 0.95) on bafa.de before submission.
 
 ## Solved
 
-- `npm audit` warnings in the test tool: upgraded Vitest 3.2.7 → 4.1.12, 0 vulnerabilities, 28 tests pass.
+- `npm audit` warnings in the test tool: upgraded Vitest 3.2.7 → 4.1.12, 0 vulnerabilities. (b65840b)
+- Installation price, subsidy note, VAT, volume discount and large elements: settled by the client's answers on 2026-11-03, see document-review.md. (447ce89)
+- Commit history rewritten with the private noreply email and force-pushed; GitHub shows only the noreply address.
+- Demo online at https://arda-sahin0.github.io/Fenster-Nord/.
