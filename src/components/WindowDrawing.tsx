@@ -12,7 +12,8 @@ interface Props {
 
 const EDGE = 2; // room for the frame stroke
 
-/** A window drawn to scale. Dashed lines show how a sash opens: turn (point at the hinge side) and tilt (point at the top). */
+/** A window drawn to scale. Dashed lines show how a sash opens; as in German window drawings, the point of each
+ *  triangle is on the hinge side: at the side for turning, at the bottom for tilting. */
 export function WindowDrawing({ opening, size, widthCm, heightCm, rollerShutter = false }: Props) {
   const ratio = widthCm && heightCm ? widthCm / heightCm : 0.8;
   const w = ratio >= 1 ? size : size * ratio;
@@ -54,7 +55,7 @@ export function WindowDrawing({ opening, size, widthCm, heightCm, rollerShutter 
           {opening === 'tiltTurn' && (
             <>
               {turn(gx, gx + gw)}
-              <polyline points={`${gx},${gy + gh} ${mid},${gy} ${gx + gw},${gy + gh}`} className="swing" />
+              <polyline points={`${gx},${gy} ${mid},${gy + gh} ${gx + gw},${gy}`} className="swing" />
             </>
           )}
         </>
