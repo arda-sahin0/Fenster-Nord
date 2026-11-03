@@ -21,8 +21,7 @@ Details and sources for each item: [document-review.md](document-review.md).
 - Interior window sill only in the installation terms (review item 6).
 - Two-sash window has no minimum width (review item 11).
 - Questions to the client not sent yet.
-- `npm audit`: 3 warnings in the test tool Vitest 3.2.7 (not in the website). Fixed only in Vitest ≥ 4.1.11, a major upgrade. Decide whether to upgrade.
 
 ## Solved
 
--
+- `npm audit` warnings in the test tool: upgraded Vitest 3.2.7 → 4.1.12, 0 vulnerabilities, 28 tests pass.
