@@ -78,7 +78,7 @@ export function ContactStep({ contact, postcode, onChange, onBack, onSubmit }: P
         <div className="city-row">
           <div className="field">
             <label htmlFor="contact-postcode">PLZ</label>
-            <input id="contact-postcode" value={postcode} readOnly aria-readonly="true" />
+            <input id="contact-postcode" value={postcode} readOnly />
           </div>
           <TextField id="city" label="Ort" autoComplete="address-level2" value={contact.city} onChange={(v) => set('city', v)} error={errors.city} />
         </div>

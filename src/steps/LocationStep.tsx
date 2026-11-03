@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { isInServiceArea } from '../pricing/calculate';
 import { config } from '../pricing/config';
 import { floorLabels, noteTexts } from '../ui/texts';
 
@@ -12,9 +13,8 @@ interface Props {
 
 export function LocationStep({ postcode, highestFloor, onChange, onBack, onNext }: Props) {
   const [submitted, setSubmitted] = useState(false);
-  const valid = /^\d{5}$/.test(postcode);
-  const { from, to } = config.serviceAreaPostcodes;
-  const outside = valid && (Number(postcode) < from || Number(postcode) > to);
+  const inArea = isInServiceArea(postcode);
+  const valid = inArea !== undefined;
 
   function next() {
     setSubmitted(true);
@@ -42,7 +42,7 @@ export function LocationStep({ postcode, highestFloor, onChange, onBack, onNext 
           />
           {submitted && !valid && <p className="error">Bitte eine 5-stellige Postleitzahl eingeben.</p>}
         </div>
-        {outside && <p className="notice">{noteTexts.outsideServiceArea.text}</p>}
+        {inArea === false && <p className="notice">{noteTexts.outsideServiceArea.text}</p>}
 
         <fieldset>
           <legend>In welchem Stockwerk liegt das höchste Fenster?</legend>

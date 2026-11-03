@@ -53,10 +53,6 @@ export const noteTexts: Record<Note, { title: string; text: string }> = {
     title: 'Große Fenster',
     text: `Fenster über ${formatDecimal(config.twoPersonInstallAboveM2)} m² bauen wir aus Sicherheitsgründen zu zweit ein. Ob dafür Mehrkosten entstehen, sagen wir Ihnen beim Aufmaß.`,
   },
-  minAreaApplied: {
-    title: 'Mindestfläche',
-    text: `Kleine Fenster berechnen wir mit mindestens ${formatDecimal(config.minChargedAreaM2)} m².`,
-  },
 };
 
 /** Plain-language insulation level for a U-value. Lower Uw = better insulation. */

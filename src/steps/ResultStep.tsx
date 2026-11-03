@@ -14,8 +14,6 @@ interface Props {
 
 export function ResultStep({ quote, onEditWindows, onBack, onNext }: Props) {
   const product = quote.lines[0]!.product;
-  // The minimum-area note is already shown in the breakdown line itself.
-  const notes = quote.notes.filter((n) => n !== 'minAreaApplied');
 
   return (
     <section>
@@ -31,9 +29,9 @@ export function ResultStep({ quote, onEditWindows, onBack, onNext }: Props) {
         Kostenloses Aufmaß anfragen
       </button>
 
-      {notes.length > 0 && (
+      {quote.notes.length > 0 && (
         <div className="notes">
-          {notes.map((n) => (
+          {quote.notes.map((n) => (
             <div key={n} className="notice">
               <strong>{noteTexts[n].title}</strong>
               <p>{noteTexts[n].text}</p>

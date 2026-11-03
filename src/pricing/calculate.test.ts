@@ -34,7 +34,7 @@ describe('window price', () => {
     const q = quote({ windows: [window({ widthMm: 500, heightMm: 600 })] });
     expect(first(q).chargedAreaM2).toBe(0.8);
     expect(first(q).unit.baseCents).toBe(31600); // 0.8 × 395
-    expect(q.notes).toContain('minAreaApplied');
+    expect(first(q).minAreaApplied).toBe(true);
   });
 
   it('gives 15 % off for fixed glazing', () => {

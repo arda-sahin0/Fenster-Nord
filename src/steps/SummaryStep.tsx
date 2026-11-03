@@ -60,15 +60,13 @@ export function SummaryStep({ state, quote, onRestart }: Props) {
         </dd>
       </dl>
 
-      {quote.notes.filter((n) => n !== 'minAreaApplied').length > 0 && (
+      {quote.notes.length > 0 && (
         <>
           <h2>Klären wir beim Aufmaß</h2>
           <ul className="facts">
-            {quote.notes
-              .filter((n) => n !== 'minAreaApplied')
-              .map((n) => (
-                <li key={n}>{noteTexts[n].title}</li>
-              ))}
+            {quote.notes.map((n) => (
+              <li key={n}>{noteTexts[n].title}</li>
+            ))}
           </ul>
         </>
       )}

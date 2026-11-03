@@ -1,4 +1,4 @@
-import { config as defaultConfig, type Config, type InstallationModel } from './config';
+import { config as defaultConfig, type Config } from './config';
 import { findProduct, type Product } from './products';
 
 export type Opening = 'tiltTurn' | 'fixed' | 'twoSash';
@@ -53,14 +53,13 @@ export interface WindowLine {
 }
 
 export interface Installation {
-  model: InstallationModel;
   flatFeeCents: number;
   perWindowCents: number;
   removalCents: number;
   totalCents: number;
 }
 
-export type Note = 'outsideServiceArea' | 'scaffoldingPossible' | 'twoPersonInstall' | 'minAreaApplied';
+export type Note = 'outsideServiceArea' | 'scaffoldingPossible' | 'twoPersonInstall';
 
 export interface Quote {
   lines: WindowLine[];
@@ -148,10 +147,11 @@ function priceInstallation(windowCount: number, cfg: Config): Installation {
   const flatFeeCents = model === 'perWindow' ? 0 : cents(cfg.installationFlatFeeEur);
   const perWindowCents = model === 'flatFeePlusRemoval' ? 0 : cents(cfg.installationPerWindowEur) * windowCount;
   const removalCents = model === 'flatFeePlusRemoval' ? cents(cfg.removalPerOldWindowEur) * windowCount : 0;
-  return { model, flatFeeCents, perWindowCents, removalCents, totalCents: flatFeeCents + perWindowCents + removalCents };
+  return { flatFeeCents, perWindowCents, removalCents, totalCents: flatFeeCents + perWindowCents + removalCents };
 }
 
-function isInServiceArea(postcode: string, cfg: Config): boolean | undefined {
+/** undefined while the postcode is not five digits. */
+export function isInServiceArea(postcode: string, cfg: Config = defaultConfig): boolean | undefined {
   if (!/^\d{5}$/.test(postcode.trim())) return undefined;
   const n = Number(postcode);
   return n >= cfg.serviceAreaPostcodes.from && n <= cfg.serviceAreaPostcodes.to;
@@ -180,7 +180,6 @@ export function calculateQuote(order: OrderInput, cfg: Config = defaultConfig): 
   if (order.postcode !== undefined && isInServiceArea(order.postcode, cfg) === false) notes.push('outsideServiceArea');
   if ((order.highestFloor ?? 0) >= cfg.scaffoldingFromFloor) notes.push('scaffoldingPossible');
   if (lines.some((l) => l.needsTwoPersonInstall)) notes.push('twoPersonInstall');
-  if (lines.some((l) => l.minAreaApplied)) notes.push('minAreaApplied');
 
   return {
     ok: true,

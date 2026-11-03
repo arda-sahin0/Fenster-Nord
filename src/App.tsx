@@ -39,11 +39,6 @@ export function App() {
 
   return (
     <>
-      <div className="backdrop" aria-hidden="true">
-        <span className="blob one" />
-        <span className="blob two" />
-        <span className="blob three" />
-      </div>
       <header className="site-header">
         <div className="brand">
           <span className="logo" aria-hidden="true" />
