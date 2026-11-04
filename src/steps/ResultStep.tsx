@@ -2,7 +2,7 @@ import { AnimatedPrice } from '../components/AnimatedPrice';
 import { Breakdown } from '../components/Breakdown';
 import type { Quote } from '../pricing/calculate';
 import { config } from '../pricing/config';
-import { formatDecimal } from '../ui/format';
+import { formatDecimal, formatPercent } from '../ui/format';
 import { noteTexts } from '../ui/texts';
 
 interface Props {
@@ -21,7 +21,7 @@ export function ResultStep({ quote, onEditWindows, onBack, onNext }: Props) {
         <p className="eyebrow">Ihr unverbindlicher Richtpreis</p>
         <AnimatedPrice className="result-price" cents={quote.grossCents} />
         <p className="result-sub">
-          {quote.windowCount} Fenster {product.name} · inkl. Montage und 19 % MwSt.
+          {quote.windowCount} Fenster {product.name} · inkl. Montage und {formatPercent(config.vatRate)} MwSt.
         </p>
       </div>
 

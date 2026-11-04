@@ -1,7 +1,8 @@
 import { calculateQuote } from '../pricing/calculate';
+import { config } from '../pricing/config';
 import { products } from '../pricing/products';
 import { toOrder, type AppState } from '../state';
-import { formatCents, formatDecimal } from '../ui/format';
+import { formatCents, formatDecimal, formatPercent } from '../ui/format';
 import { insulationLabel, problemText } from '../ui/texts';
 
 interface Props {
@@ -25,7 +26,7 @@ export function SystemStep({ state, onSelect, onBack, onNext }: Props) {
     <section>
       <h1>Welches Fenster passt zu Ihnen?</h1>
       <p className="lead">
-        Die Preise gelten für alle Ihre Fenster zusammen, inklusive Montage und 19 % MwSt. Je kleiner der U-Wert, desto
+        Die Preise gelten für alle Ihre Fenster zusammen, inklusive Montage und {formatPercent(config.vatRate)} MwSt. Je kleiner der U-Wert, desto
         besser hält das Fenster die Wärme im Haus.
       </p>
 

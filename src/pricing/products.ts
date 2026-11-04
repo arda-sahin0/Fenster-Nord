@@ -26,7 +26,7 @@ const COLUMNS = [
   'hoehe_max_mm',
 ] as const;
 
-/** Reads a German number like "0,90" or "395". Throws on anything else. */
+/** Reads a number like "0,90" or "395". Throws on anything else. */
 function parseNumber(value: string, where: string): number {
   const n = Number(value.trim().replace(',', '.'));
   if (value.trim() === '' || !Number.isFinite(n)) {

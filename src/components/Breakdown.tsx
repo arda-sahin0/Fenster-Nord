@@ -1,11 +1,10 @@
 import type { Quote, WindowLine } from '../pricing/calculate';
 import { config } from '../pricing/config';
-import { formatCents, formatCm, formatDecimal, formatEur } from '../ui/format';
+import { formatCents, formatCm, formatDecimal, formatEur, formatPercent } from '../ui/format';
 import { openingLabels } from '../ui/texts';
 
 /** The full price breakdown: every amount with the rule that produced it. */
 export function Breakdown({ quote }: { quote: Quote }) {
-  const percent = (rate: number) => `${Math.round(rate * 100)} %`;
   const inst = quote.installation;
 
   return (
@@ -18,7 +17,7 @@ export function Breakdown({ quote }: { quote: Quote }) {
         <tbody>
           {quote.volumeDiscountCents !== 0 && (
             <Row
-              label={`Mengenrabatt ${percent(config.volumeDiscount)}`}
+              label={`Mengenrabatt ${formatPercent(config.volumeDiscount)}`}
               detail={`ab ${config.volumeDiscountMinWindows} Fenstern, auf den Fensterpreis inkl. Öffnungsart`}
               cents={quote.volumeDiscountCents}
             />
@@ -30,7 +29,7 @@ export function Breakdown({ quote }: { quote: Quote }) {
             cents={inst.removalCents}
           />
           <Row label="Summe netto" cents={quote.netCents} className="subtotal" />
-          <Row label={`MwSt. ${percent(config.vatRate)}`} cents={quote.vatCents} />
+          <Row label={`MwSt. ${formatPercent(config.vatRate)}`} cents={quote.vatCents} />
           <Row label="Richtpreis inkl. MwSt." cents={quote.grossCents} className="total" />
         </tbody>
       </table>
@@ -68,7 +67,7 @@ function LineBlock({ line, index }: { line: WindowLine; index: number }) {
           {unit.fixedGlazingDiscountCents !== 0 && (
             <Row
               label="Nachlass Festverglasung"
-              detail={`${Math.round(config.fixedGlazingDiscount * 100)} % auf den Fensterpreis`}
+              detail={`${formatPercent(config.fixedGlazingDiscount)} auf den Fensterpreis`}
               cents={unit.fixedGlazingDiscountCents}
             />
           )}

@@ -8,6 +8,9 @@ export const formatCents = (cents: number) => euro.format(cents / 100);
 /** 395 → "395,00 €" */
 export const formatEur = (eur: number) => euro.format(eur);
 
+/** 0.19 → "19 %" */
+export const formatPercent = (rate: number) => `${Math.round(rate * 100)} %`;
+
 /** 1.68 → "1,68" */
 export const formatDecimal = (n: number) => decimal2.format(n);
 

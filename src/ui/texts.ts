@@ -21,20 +21,20 @@ export const timeSlotLabels: Record<TimeSlot, string> = {
 
 const cm = (mm: number) => `${mm / 10} cm`;
 
-export function problemText(problem: WindowProblem, product?: Product): string {
+export function problemText(problem: WindowProblem, product: Product): string {
   switch (problem) {
     case 'unknownProduct':
       return 'Unbekanntes Fenstersystem';
     case 'invalidQuantity':
       return 'Anzahl muss mindestens 1 sein';
     case 'widthTooSmall':
-      return `zu schmal (mind. ${cm(product!.widthMinMm)})`;
+      return `zu schmal (mind. ${cm(product.widthMinMm)})`;
     case 'widthTooLarge':
-      return `zu breit (max. ${cm(product!.widthMaxMm)})`;
+      return `zu breit (max. ${cm(product.widthMaxMm)})`;
     case 'heightTooSmall':
-      return `zu niedrig (mind. ${cm(product!.heightMinMm)})`;
+      return `zu niedrig (mind. ${cm(product.heightMinMm)})`;
     case 'heightTooLarge':
-      return `zu hoch (max. ${cm(product!.heightMaxMm)})`;
+      return `zu hoch (max. ${cm(product.heightMaxMm)})`;
     case 'twoSashTooNarrow':
       return `zweiflügelig erst ab ${cm(config.twoSashMinWidthMm)} Breite`;
   }
