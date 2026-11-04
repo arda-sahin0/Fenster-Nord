@@ -29,7 +29,9 @@
   color-scheme: light;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -524,6 +526,11 @@ input[aria-invalid='true'] {
   max-width: 11rem;
   letter-spacing: 0.15em;
   font-variant-numeric: tabular-nums;
+}
+
+/* Spaced digits for the postcode itself, normal spacing for the placeholder text */
+.postcode::placeholder {
+  letter-spacing: normal;
 }
 
 .error {
