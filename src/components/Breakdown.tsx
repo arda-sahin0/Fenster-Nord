@@ -1,6 +1,6 @@
 import type { Quote, WindowLine } from '../pricing/calculate';
 import { config } from '../pricing/config';
-import { formatCents, formatCm, formatDecimal, formatEur, formatPercent } from '../ui/format';
+import { formatArea, formatCents, formatCm, formatDecimal, formatEur, formatPercent } from '../ui/format';
 import { openingLabels } from '../ui/texts';
 
 /** The full price breakdown: every amount with the rule that produced it. */
@@ -22,7 +22,11 @@ export function Breakdown({ quote }: { quote: Quote }) {
               cents={quote.volumeDiscountCents}
             />
           )}
-          <Row label="Montagepauschale je Auftrag" detail="Anfahrt, Baustelleneinrichtung, Abdeckarbeiten" cents={inst.flatFeeCents} />
+          <Row
+            label="Montagepauschale je Auftrag"
+            detail="Einbau der neuen Fenster, Anfahrt, Baustelleneinrichtung, Abdeckarbeiten"
+            cents={inst.flatFeeCents}
+          />
           <Row
             label="Ausbau und Entsorgung der Altfenster"
             detail={`${quote.windowCount} × ${formatEur(config.removalPerOldWindowEur)}`}
@@ -42,7 +46,8 @@ function LineBlock({ line, index }: { line: WindowLine; index: number }) {
   const widthM = input.widthMm / 1000;
   const size = `${formatCm(input.widthMm / 10)} × ${formatCm(input.heightMm / 10)} cm`;
 
-  const title = `Fenster ${index + 1}: ${input.quantity > 1 ? `${input.quantity} × ` : ''}${size}, ${openingLabels[input.opening].title}`;
+  const count = input.quantity > 1 ? ` (${input.quantity} Stück)` : '';
+  const title = `Fenster ${index + 1}: ${size}, ${openingLabels[input.opening].title}${count}`;
 
   // Title outside the table, so it sits above the white box instead of inside it.
   return (
@@ -59,8 +64,8 @@ function LineBlock({ line, index }: { line: WindowLine; index: number }) {
             label={product.name}
             detail={
               line.minAreaApplied
-                ? `${formatDecimal(line.areaM2)} m², berechnet mit Mindestfläche ${formatDecimal(line.chargedAreaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
-                : `${formatDecimal(line.areaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
+                ? `${formatArea(line.areaM2)} m², berechnet mit Mindestfläche ${formatArea(line.chargedAreaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
+                : `${formatArea(line.areaM2)} m² × ${formatEur(product.pricePerM2Eur)}/m²`
             }
             cents={unit.baseCents}
           />

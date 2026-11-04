@@ -32,7 +32,12 @@ try {
 
   // Step 1: windows
   await button('Fenster speichern').click();
-  assert.deepEqual(await errors(), ['Bitte Breite in cm eingeben, z. B. 120.', 'Bitte Höhe in cm eingeben, z. B. 120.']);
+  assert.deepEqual(await errors(), ['Bitte Breite in ganzen Zentimetern eingeben.', 'Bitte Höhe in ganzen Zentimetern eingeben.']);
+
+  // Regression: with 120,5 cm the breakdown showed a rounded area ("1,69 m²") that did not recompute to the
+  // shown price. Only whole cm are accepted now, so every shown area is exact.
+  await page.getByLabel('Breite').fill('120,5');
+  assert.equal((await errors())[0], 'Bitte Breite in ganzen Zentimetern eingeben.');
 
   await addWindow({ width: '120', height: '140' });
   await button('+ Weiteres Fenster hinzufügen').click();
@@ -75,7 +80,7 @@ try {
     'Kunststofffenster Therm 82 3,20 m² × 395,00 €/m² 1.264,00 €',
     'Aufpreis zweiflügelig 120,00 €',
     'Fensterbank innen 2,00 m × 38,00 €/m 76,00 €',
-    'Montagepauschale je Auftrag Anfahrt, Baustelleneinrichtung, Abdeckarbeiten 450,00 €',
+    'Montagepauschale je Auftrag Einbau der neuen Fenster, Anfahrt, Baustelleneinrichtung, Abdeckarbeiten 450,00 €',
     'Ausbau und Entsorgung der Altfenster 4 × 60,00 € 240,00 €',
     'Summe netto 3.464,80 €',
     'MwSt. 19 % 658,31 €',

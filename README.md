@@ -32,7 +32,7 @@ Die Widersprüche in den Unterlagen habe ich per Rückfrage geklärt, statt sie 
 | Fensterbank innen (38 €/m) als Extra, nicht im Mengenrabatt | Steht in den Montagebedingungen; der Rabatt gilt laut Antwort nur auf Fensterpreis und Öffnungsart |
 | Zweiflügelig erst ab 80 cm Breite | Keine Angabe; schmaler ist technisch kaum sinnvoll |
 | Ein Fenstersystem für den ganzen Auftrag | So wird meist renoviert, und der Vergleich der Systeme bleibt einfach |
-| Maße in cm am alten Fenster | Laien können das Außenmaß eines neuen Blendrahmens nicht messen; das Aufmaß korrigiert es |
+| Maße in ganzen cm am alten Fenster | Laien können das Außenmaß eines neuen Blendrahmens nicht messen; das Aufmaß korrigiert es. Ganze cm halten jede angezeigte Fläche exakt, sodass die Aufstellung nachrechenbar bleibt |
 | Preis vor dem Kontaktformular | Wer erst seine Telefonnummer abgeben muss, bricht eher ab |
 
 ## Was mir an den Unterlagen aufgefallen ist
@@ -53,6 +53,7 @@ Alle 17 Punkte mit Fundstelle und Zitat: [docs/document-review.md](docs/document
 | Vite-Version mit bekannten Sicherheitslücken gewählt; danach versprach `npm audit fix` eine Lösung, die keine war | `npm audit` nach jeder Installation erneut ausgeführt |
 | Der Klicktest las 2.941,30 € statt 4.158,81 €: Er las die Zahl, während sie noch hochzählte | Ergebnis passte nicht zur Rechnung von Hand; der Test liest jetzt den Endwert |
 | Nach dem Redesign blieb toter Code: ein Hinweis, der überall wieder herausgefiltert wurde, zwei Komponenten für dieselbe Zeichnung, kaum sichtbare animierte Hintergrundflächen | Eigenes Review und Suche nach ungenutzten Klassen und Exporten |
-| Ein Hintergrundserver wurde als „gestoppt“ gemeldet, lief aber weiter | Der nächste Start scheiterte am belegten Port |
+| Das Kipp-Symbol zeigte mit der Spitze nach oben (= Klappfenster); die Spitze markiert die Scharniere, beim Kippen also unten | Beim Anschauen der Zeichnung selbst bemerkt |
+| Die Aufstellung zeigte gerundete Flächen („1,69 m²“ statt 1,687 m²), die Zahlen ließen sich nicht nachrechnen | Abschließender Test mit krummen Maßen, von Hand nachgerechnet |
 
 Vollständiges Protokoll: [docs/ai-log.md](docs/ai-log.md)

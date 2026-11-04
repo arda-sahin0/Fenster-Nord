@@ -3,7 +3,7 @@ import { WindowDrawing } from '../components/WindowDrawing';
 import type { Opening } from '../pricing/calculate';
 import { config } from '../pricing/config';
 import { sizeRangeCm, type WindowSpec } from '../state';
-import { formatCm, formatDecimal, parseCm } from '../ui/format';
+import { formatArea, formatCm, parseCm } from '../ui/format';
 import { openingLabels } from '../ui/texts';
 
 interface Props {
@@ -15,8 +15,8 @@ interface Props {
 
 /** Form for one window: size, opening type, extras, quantity. */
 export function WindowEditor({ initial, title, onSave, onCancel }: Props) {
-  const [width, setWidth] = useState(initial ? String(initial.widthCm).replace('.', ',') : '');
-  const [height, setHeight] = useState(initial ? String(initial.heightCm).replace('.', ',') : '');
+  const [width, setWidth] = useState(initial ? String(initial.widthCm) : '');
+  const [height, setHeight] = useState(initial ? String(initial.heightCm) : '');
   const [quantity, setQuantity] = useState(initial?.quantity ?? 1);
   const [opening, setOpening] = useState<Opening>(initial?.opening ?? 'tiltTurn');
   const [rollerShutter, setRollerShutter] = useState(initial?.rollerShutter ?? false);
@@ -76,7 +76,7 @@ export function WindowEditor({ initial, title, onSave, onCancel }: Props) {
         />
         <figcaption>
           {sizeValid
-            ? `${formatCm(widthCm)} × ${formatCm(heightCm)} cm · ${formatDecimal((widthCm * heightCm) / 10000)} m²`
+            ? `${formatCm(widthCm)} × ${formatCm(heightCm)} cm · ${formatArea((widthCm * heightCm) / 10000)} m²`
             : 'Vorschau erscheint bei Eingabe'}
         </figcaption>
       </figure>
@@ -135,7 +135,7 @@ export function WindowEditor({ initial, title, onSave, onCancel }: Props) {
 }
 
 function sizeError(cm: number, min: number, max: number, name: string): string | undefined {
-  if (Number.isNaN(cm)) return `Bitte ${name} in cm eingeben, z. B. 120.`;
+  if (Number.isNaN(cm)) return `Bitte ${name} in ganzen Zentimetern eingeben.`;
   if (cm < min) return `${name} mindestens ${min} cm.`;
   if (cm > max) return `${name} höchstens ${max} cm.`;
   return undefined;
@@ -158,7 +158,7 @@ function Field({ id, label, placeholder, value, onChange, error }: FieldProps) {
       <div className="input-unit">
         <input
           id={id}
-          inputMode="decimal"
+          inputMode="numeric"
           autoComplete="off"
           placeholder={placeholder}
           value={value}

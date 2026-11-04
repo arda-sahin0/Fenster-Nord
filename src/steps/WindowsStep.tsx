@@ -48,8 +48,7 @@ export function WindowsStep({ windows, onChange, onNext }: Props) {
                 <WindowDrawing opening={w.opening} size={48} widthCm={w.widthCm} heightCm={w.heightCm} rollerShutter={w.rollerShutter} />
                 <div className="grow">
                   <strong>
-                    {w.quantity > 1 && `${w.quantity} × `}
-                    {formatCm(w.widthCm)} × {formatCm(w.heightCm)} cm
+                    {formatCm(w.widthCm)} × {formatCm(w.heightCm)} cm{w.quantity > 1 && ` (${w.quantity} Stück)`}
                   </strong>
                   <span className="muted">{describeWindow(w)}</span>
                 </div>
