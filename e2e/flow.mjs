@@ -39,6 +39,16 @@ try {
   await page.getByLabel('Breite').fill('120,5');
   assert.equal((await errors())[0], 'Bitte Breite in ganzen Zentimetern eingeben.');
 
+  // Regression: removing the last window, or "Neu starten" on this screen, left an empty list without the editor.
+  const editorTitle = () => page.locator('.editor h2').innerText();
+  await addWindow({ width: '120', height: '140' });
+  await button('Entfernen').click();
+  assert.equal(await editorTitle(), 'Erstes Fenster');
+  await addWindow({ width: '120', height: '140' });
+  page.once('dialog', (d) => d.accept());
+  await button('Neu starten').click();
+  assert.equal(await editorTitle(), 'Erstes Fenster');
+
   await addWindow({ width: '120', height: '140' });
   await button('+ Weiteres Fenster hinzufügen').click();
   await addWindow({ width: '60', height: '50', opening: 'Fest verglast', rollerShutter: true, quantity: 2 });

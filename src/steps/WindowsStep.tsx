@@ -13,7 +13,9 @@ interface Props {
 
 export function WindowsStep({ windows, onChange, onNext }: Props) {
   // null = editor closed, 'new' = adding, otherwise the id of the window being edited.
-  const [editing, setEditing] = useState<string | null>(windows.length === 0 ? 'new' : null);
+  const [openEditor, setEditing] = useState<string | null>(null);
+  // An empty list always shows the editor, also after removing the last window or restarting on this screen.
+  const editing = windows.length === 0 ? 'new' : openEditor;
   const count = windows.reduce((sum, w) => sum + w.quantity, 0);
 
   function save(spec: WindowSpec) {
