@@ -26,6 +26,11 @@ export function App() {
     update({ step });
     window.scrollTo({ top: 0 });
   };
+  const restart = () => {
+    clearState();
+    setState(initialState);
+    window.scrollTo({ top: 0 });
+  };
 
   const result = state.productId ? calculateQuote(toOrder(state, state.productId)) : undefined;
   const quote = result?.ok ? result.quote : undefined;
@@ -46,6 +51,15 @@ export function App() {
             <strong>Fenster Nord</strong>
             <span className="tagline">Richtpreis-Rechner</span>
           </span>
+          {state.windows.length > 0 && step !== 'summary' && (
+            <button
+              type="button"
+              className="link restart"
+              onClick={() => window.confirm('Alle Eingaben löschen und neu beginnen?') && restart()}
+            >
+              Neu starten
+            </button>
+          )}
         </div>
       </header>
 
@@ -109,11 +123,7 @@ export function App() {
           <SummaryStep
             state={state}
             quote={quote}
-            onRestart={() => {
-              clearState();
-              setState(initialState);
-              window.scrollTo({ top: 0 });
-            }}
+            onRestart={restart}
           />
         )}
       </main>

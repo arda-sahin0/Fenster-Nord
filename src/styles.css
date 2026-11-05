@@ -404,6 +404,10 @@ a {
   color: var(--error);
 }
 
+.link.restart {
+  margin-left: auto;
+}
+
 .actions {
   margin-top: 16px;
 }
